@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-ci:
+    name: Backend (lint + typecheck + test)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: reading_helper_test
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U app -d reading_helper_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://app:test@localhost:5432/reading_helper_test
+      AI_PROVIDER: gemini
+      GEMINI_API_KEY: dummy
+      OPENAI_API_KEY: dummy
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Initialize database schema
+        run: |
+          PGPASSWORD=test psql -h localhost -U app -d reading_helper_test \
+            -f backend/scripts/init_schema.sql
+
+      - name: Lint (ruff)
+        run: ruff check backend/
+
+      - name: Typecheck (mypy)
+        run: mypy backend/ --ignore-missing-imports
+
+      - name: Test (pytest)
+        working-directory: backend
+        run: pytest tests/ -v --tb=short
+
+  frontend-ci:
+    name: Frontend (typecheck + lint + build)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
