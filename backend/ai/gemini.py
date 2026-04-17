@@ -79,7 +79,7 @@ class GeminiProvider(AIProvider):
         )
 
         response = client.models.generate_content(model=_MODEL, contents=prompt)
-        raw_text = response.text
+        raw_text = response.text or ""
 
         # Strip markdown code fences if present
         json_match = re.search(r"\{[\s\S]*\}", raw_text)

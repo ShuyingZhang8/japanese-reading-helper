@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, field_validator
 
@@ -119,7 +119,7 @@ class QuizQuestion(BaseModel):
 
     @field_validator("correct_id")
     @classmethod
-    def correct_id_in_options(cls, v: str, info: any) -> str:
+    def correct_id_in_options(cls, v: str, info: Any) -> str:
         options = info.data.get("options", [])
         ids = {opt.id for opt in options}
         if v not in ids:
