@@ -2,14 +2,21 @@ import { useState } from 'react';
 import SetupPage from './pages/SetupPage';
 import PreAnalysisPage from './pages/PreAnalysisPage';
 import ReadingPage from './pages/ReadingPage';
+import type { TokenInfo, VocabItem } from './services/tokenizer';
 
 export type PageType = 'setup' | 'pre-analysis' | 'reading';
+
+export interface TokenizedData {
+  tokens: TokenInfo[];
+  token_count: number;
+  original_text: string;
+}
 
 export interface AppState {
   jlptLevel: string;
   articleContent: string;
-  tokenizedData: any;
-  unknownWords: any[];
+  tokenizedData: TokenizedData | null;
+  unknownWords: VocabItem[];
 }
 
 function App() {

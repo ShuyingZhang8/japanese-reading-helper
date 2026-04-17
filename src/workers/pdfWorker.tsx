@@ -128,7 +128,7 @@ self.onmessage = async (e: MessageEvent<ReportData>) => {
         <Page size="A4" style={S.page}>
           {/* Header */}
           <Text style={S.coverTitle}>Japanese Reading Companion</Text>
-          <Text style={S.coverMeta}>JLPT Level: {data.jlptLevel}　　Date: {data.date}</Text>
+          <Text style={S.coverMeta}>JLPT Level: {data.jlptLevel}  Date: {data.date}</Text>
           <View style={S.divider} />
 
           {/* Section 1: Article */}
@@ -239,7 +239,7 @@ self.onmessage = async (e: MessageEvent<ReportData>) => {
 
     const blob = await pdf(doc).toBlob();
     const buffer = await blob.arrayBuffer();
-    self.postMessage({ ok: true, buffer }, [buffer]);
+    self.postMessage({ ok: true, buffer }, { transfer: [buffer] });
   } catch (err) {
     console.error('[pdfWorker] generation failed:', err);
     self.postMessage({ ok: false, error: String(err) });

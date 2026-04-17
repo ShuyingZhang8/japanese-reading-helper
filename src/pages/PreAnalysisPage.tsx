@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Loader, AlertCircle, Download } from 'lucide-react';
 import { analyzeArticle } from '../services/tokenizer';
+import type { VocabItem } from '../services/tokenizer';
+import type { TokenizedData } from '../App';
 
 interface PreAnalysisPageProps {
   jlptLevel: string;
   articleContent: string;
   onBack: () => void;
-  onStart: (tokenizedData: any, unknownWords: any[]) => void;
-  unknownWords: any[];
+  onStart: (tokenizedData: TokenizedData, unknownWords: VocabItem[]) => void;
+  unknownWords: VocabItem[];
 }
 
 const POS_JA_TO_EN: Record<string, string> = {
@@ -32,7 +34,7 @@ function translatePos(pos: string): string {
   return POS_JA_TO_EN[pos] ?? pos;
 }
 
-function exportCsv(words: any[], jlptLevel: string) {
+function exportCsv(words: VocabItem[], jlptLevel: string) {
   const header = 'Word,Reading,Part of Speech,Meaning';
   const rows = words.map((w) => {
     const escape = (s: string) => `"${(s ?? '').replace(/"/g, '""')}"`;
@@ -56,9 +58,9 @@ export default function PreAnalysisPage({
 }: PreAnalysisPageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [tokenizedData, setTokenizedData] = useState<any>(null);
-  const [unknownWords, setUnknownWords] = useState<any[]>([]);
-  const [uniqueUnknownWords, setUniqueUnknownWords] = useState<any[]>([]);
+  const [tokenizedData, setTokenizedData] = useState<TokenizedData | null>(null);
+  const [unknownWords, setUnknownWords] = useState<VocabItem[]>([]);
+  const [uniqueUnknownWords, setUniqueUnknownWords] = useState<VocabItem[]>([]);
 
   useEffect(() => {
     const processArticle = async () => {
@@ -83,8 +85,8 @@ export default function PreAnalysisPage({
         }));
         setUnknownWords(unknownList);
         setUniqueUnknownWords(unknownList); // backend already dedupes
-      } catch (err: any) {
-        setError(err.message || 'Failed to analyze article. Make sure the backend is running on http://localhost:8000');
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to analyze article. Make sure the backend is running on http://localhost:8000');
       } finally {
         setIsLoading(false);
       }
@@ -93,7 +95,7 @@ export default function PreAnalysisPage({
     processArticle();
   }, [articleContent, jlptLevel]);
 
-  const handleStartReading = () => onStart(tokenizedData, unknownWords);
+  const handleStartReading = () => { if (tokenizedData) onStart(tokenizedData, unknownWords); };
 
   const unknownPercentage = tokenizedData
     ? Math.round((unknownWords.length / tokenizedData.token_count) * 100)

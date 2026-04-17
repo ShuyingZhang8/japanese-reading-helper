@@ -6,7 +6,7 @@ import QuizPanel from '../components/QuizPanel';
 import { explainSentence, type SentenceExplanationResponse } from '../services/sentenceApi';
 import { generateQuiz, type QuizQuestion, type OptionId } from '../services/quizApi';
 import { downloadReport } from '../services/reportPdf';
-import type { TokenInfo } from '../services/tokenizer';
+import type { TokenInfo, VocabItem } from '../services/tokenizer';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -57,7 +57,7 @@ function segmentIntoSentences(tokens: TokenInfo[]): SentenceGroup[] {
 interface ReadingPageProps {
   articleContent: string;
   tokenizedData: { tokens: TokenInfo[]; token_count: number; original_text: string } | null;
-  unknownWords: { word: string }[];
+  unknownWords: VocabItem[];
   jlptLevel: string;
   onBack: () => void;       // → PreAnalysisPage
   onNewArticle: () => void; // → SetupPage
@@ -190,7 +190,7 @@ export default function ReadingPage({
         jlptLevel,
         date,
         tokens: tokenizedData.tokens,
-        unknownWords: unknownWords as any[],
+        unknownWords,
         sentenceAnalyses: Array.from(sentenceCache.current.values()),
         quizQuestions: quizQuestions,
         quizAnswers,

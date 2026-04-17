@@ -167,7 +167,7 @@ async def main() -> None:
         # Verification
         jlpt_count  = await conn.fetchval("SELECT COUNT(*) FROM jlpt_vocab")
         jmdict_count = await conn.fetchval("SELECT COUNT(*) FROM jmdict_entry")
-        print(f"\n── Verification ────────────────────────────")
+        print("\n── Verification ────────────────────────────")
         print(f"  jlpt_vocab:   {jlpt_count} rows")
         print(f"  jmdict_entry: {jmdict_count} rows")
         print("\nDone.")
