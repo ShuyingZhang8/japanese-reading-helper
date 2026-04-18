@@ -1,4 +1,4 @@
-const BACKEND_URL = 'http://localhost:8000';
+const BACKEND_URL = '';
 
 export type OptionId = 'A' | 'B' | 'C' | 'D';
 export type QuestionType = 'comprehension' | 'vocabulary' | 'grammar';
