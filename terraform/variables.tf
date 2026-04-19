@@ -16,11 +16,6 @@ variable "instance_type" {
   default     = "t3.small"
 }
 
-variable "your_ip_cidr" {
-  description = "Your public IP in CIDR notation (x.x.x.x/32) — restricts SSH access to only you"
-  type        = string
-}
-
 variable "ssh_public_key" {
   description = "SSH public key to install on the EC2 instance (contents of ~/.ssh/id_rsa.pub or similar)"
   type        = string

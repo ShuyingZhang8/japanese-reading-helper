@@ -7,10 +7,6 @@ project       = "reading-helper"
 # EC2 instance type: t3.micro = free tier (12 months); t3.small = ~$15/month
 instance_type = "t3.small"
 
-# Your current public IP — restricts SSH to only you
-# Find it with: curl ifconfig.me
-your_ip_cidr  = "x.x.x.x/32"
-
 # Contents of your SSH public key (cat ~/.ssh/id_rsa.pub)
 ssh_public_key = "ssh-rsa AAAA..."
 
