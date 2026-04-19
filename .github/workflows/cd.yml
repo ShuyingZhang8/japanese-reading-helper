@@ -68,12 +68,8 @@ jobs:
             git reset --hard origin/main
 
             # Recreate backend/.env from the secrets passed above
-            cat > backend/.env << EOF
-            DATABASE_URL=postgresql://app:localdev@db:5432/reading_helper
-            AI_PROVIDER=$AI_PROVIDER
-            GEMINI_API_KEY=$GEMINI_API_KEY
-            OPENAI_API_KEY=$OPENAI_API_KEY
-            EOF
+            printf 'DATABASE_URL=postgresql://app:localdev@db:5432/reading_helper\nAI_PROVIDER=%s\nGEMINI_API_KEY=%s\nOPENAI_API_KEY=%s\n' \
+              "$AI_PROVIDER" "$GEMINI_API_KEY" "$OPENAI_API_KEY" > backend/.env
 
             # Build and restart containers (brief downtime ~10-30s)
             docker compose build
