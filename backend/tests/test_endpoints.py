@@ -74,17 +74,6 @@ async def test_analyze_response_valid_schema() -> None:
     AnalyzeResponse.model_validate(response.json())
 
 
-@pytest.mark.asyncio
-async def test_tokenize_backward_compat() -> None:
-    transport = ASGITransport(app=app)
-    payload = {"text": "私は学生です。", "jlpt_level": "N5"}
-    async with AsyncClient(transport=transport, base_url="http://test") as client:
-        response = await client.post("/api/tokenize", json=payload)
-    assert response.status_code == 200
-    body = response.json()
-    assert body["success"] is True
-    assert body["token_count"] > 0
-
 
 @pytest.mark.asyncio
 async def test_explain_sentence_ok() -> None:

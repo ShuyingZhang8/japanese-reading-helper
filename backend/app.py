@@ -27,8 +27,6 @@ from schemas import (
     QuizResponse,
     SentenceExplanationRequest,
     SentenceExplanationResponse,
-    TokenizeRequest,
-    TokenizeResponse,
 )
 from tokenizer import tokenize_article
 
@@ -113,18 +111,6 @@ def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
         article_raw=req.article,
         token_count=len(marked),
         unknown_count=len(unknown_vocab),
-    )
-
-
-@app.post("/api/tokenize", response_model=TokenizeResponse)
-def tokenize(req: TokenizeRequest) -> TokenizeResponse:
-    tokens = tokenize_article(req.text)
-    marked = mark_unknown_tokens(tokens, req.jlpt_level)
-    return TokenizeResponse(
-        success=True,
-        tokens=marked,
-        token_count=len(marked),
-        original_text=req.text,
     )
 
 

@@ -41,19 +41,6 @@ class AnalyzeResponse(BaseModel):
     token_count: int
     unknown_count: int
 
-
-class TokenizeRequest(BaseModel):
-    text: str
-    jlpt_level: str = "N3"
-
-
-class TokenizeResponse(BaseModel):
-    success: bool
-    tokens: list[TokenInfo]
-    token_count: int
-    original_text: str
-
-
 class HealthResponse(BaseModel):
     status: str
     service: str
