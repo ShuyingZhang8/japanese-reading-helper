@@ -75,6 +75,9 @@ jobs:
             docker compose build
             docker compose up -d
 
+            # Seed database (idempotent — skips rows that already exist)
+            docker compose exec -T backend python scripts/seed_db.py
+
             echo "Deployed version $VERSION"
           ENDSSH
 
